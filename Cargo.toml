@@ -1,0 +1,53 @@
+[package]
+name = "kyun"
+version = "0.1.0"
+edition = "2024"
+# License as MPL2 or maybe GPL3?
+
+[workspace]
+members = ["crates/kyun-agent"]
+resolver = "3"
+
+[dependencies]
+kyun-agent = { path = "crates/kyun-agent" }
+
+serde = { version = "1", features = ["derive", "rc"] }
+serde_json = "1"
+toml = "0.9"
+tokio = { version = "1", features = ["full"] }
+
+# TODO: make this and other crates workspce dependency
+anyhow = "1"
+etcetera = "0.11"
+futures-util = { version = "0.3", features = ["std", "async-await"], default-features = false }
+imara-diff = "0.2.0"
+bitflags = "2.9"
+filetime = "0.2"
+
+memchr = "2.8.3"
+ropey = { version = "1.6.1", default-features = false, features = ["simd"] }
+
+encoding_rs = "0.8"
+chardetng = "1.0"
+tempfile = "3.27"
+
+# Terminal
+crossterm = { version = "0.29", features = ["event-stream", "bracketed-paste"] }
+ratatui = { version = "0.30" }
+unicode-segmentation = "1.12"
+unicode-general-category = "1"
+unicode-width = "=0.1.12" # Pinned to respect terminal definition of width; lib changed meaning after this version
+
+mdtext = { git = "https://github.com/kirawi/mdtext", default-features = false }
+
+[dev-dependencies]
+quickcheck = { version = "1", default-features = false }
+
+[profile.dev.package.unicode-general-category]
+opt-level = 1
+
+[target.'cfg(unix)'.dependencies]
+rustix = { version = "1.1", features = ["fs"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Security", "Win32_Security_Authorization", "Win32_Storage_FileSystem", "Win32_System_Threading"] }
